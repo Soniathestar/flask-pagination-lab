@@ -28,8 +28,8 @@ class Books(Resource):
         page = max(page, 1)
         per_page = max(min(per_page, 100), 1)
 
-        
-
+        # error_out=False prevents a 404 when the page is beyond the last one;
+        # it just returns an empty `items` list instead.
         pagination = Book.query.paginate(
             page=page, per_page=per_page, error_out=False
         )
@@ -41,3 +41,14 @@ class Books(Resource):
             "per_page": per_page,
             "total": pagination.total,
             "total_pages": pagination.pages,
+            "items": books,
+        }, 200
+
+
+api.add_resource(Books, '/books', endpoint='books')
+
+
+if __name__ == '__main__':
+    app.run(port=5555, debug=True)
+
+        
